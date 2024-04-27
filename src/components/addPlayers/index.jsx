@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function AddPlayers({ onAddPlayer }) {
+const AddPlayers = ({ onAddPlayer }) => {
   const [nome, setNome] = useState('')
 
   const handleAddPlayer = () => {
