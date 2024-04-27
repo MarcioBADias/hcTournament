@@ -24,4 +24,4 @@ const AddPlayers = ({ onAddPlayer }) => {
   )
 }
 
-export default AddPlayers
+export { AddPlayers }

@@ -32,4 +32,4 @@ const ParingRounds = ({ jogadores, onStartRound }) => {
   )
 }
 
-export default ParingRounds
+export { ParingRounds }
