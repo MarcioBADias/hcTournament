@@ -10,7 +10,7 @@ const ParingRounds = ({ jogadores, onStartRound }) => {
     while (jogadoresRestantes.length >= 2) {
       const jogador1 = jogadoresRestantes.shift()
       const jogador2 = jogadoresRestantes.shift()
-      pares.push([jogador1, jogador2])
+      pares.push([jogador1.nome, jogador2.nome])
     }
 
     setEmparceiramentos(pares)
@@ -24,7 +24,7 @@ const ParingRounds = ({ jogadores, onStartRound }) => {
       <ul>
         {emparceiramentos.map((par, index) => (
           <li key={index}>
-            {par[0]} vs {par[1]}
+            {par[0]} vs {par[1]}{' '}
           </li>
         ))}
       </ul>
