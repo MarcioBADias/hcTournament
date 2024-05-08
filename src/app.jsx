@@ -101,6 +101,13 @@ function App() {
 
   return (
     <div>
+      <img
+        className="logoRotate"
+        src="/hcMkpBlack.png"
+        style={{
+          width: 100,
+        }}
+      />
       <h1>Torneio Heroclix</h1>
       <AddPlayers onAddPlayer={adicionarJogador} />
       {!rodadaIniciada && (

@@ -11,7 +11,7 @@ const AddPlayers = ({ onAddPlayer }) => {
   }
 
   return (
-    <div>
+    <div className="addPlayers">
       <h2>Cadastro de Jogadores</h2>
       <input
         type="text"

@@ -1,14 +1,44 @@
-[data-js='root'] {
-  max-width: 1280px;
+* {
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+  box-sizing: border-box;
+}
+
+:root {
+  --cor-bgDark: #013a41;
+  --cor-bgLight: #0577be;
+}
+
+body {
+  background: linear-gradient(var(--cor-bgDark), var(--cor-bgLight));
+  color: #ffffff;
+  height: 100vh;
+  width: 100%;
 }
 
 h1 {
-  color: #006eff;
+  color: #ffffff;
+}
+
+.addPlayers button {
+  margin-left: 1rem;
 }
 
 li {
   list-style-type: none;
+}
+
+.logoRotate {
+  animation: rotate 20s linear infinite;
+  border-radius: 100%;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
