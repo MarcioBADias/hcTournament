@@ -2,19 +2,21 @@ import React, { useState } from 'react'
 
 const RoundResults = ({ emparceiramentos, onRecordResults }) => {
   const [resultados, setResultados] = useState(
-    emparceiramentos.map(() => ({ vencedor: '', pontos1: '', pontos2: '' }))
-  );
+    emparceiramentos.map(() => ({ vencedor: '', pontos1: 0, pontos2: 0 })),
+  )
 
   const handleResultChange = (index, field, value) => {
-    const novosResultados = [...resultados];
-    novosResultados[index][field] = value;
-    setResultados(novosResultados);
-  };
+    const novosResultados = [...resultados]
+    novosResultados[index][field] = value
+    setResultados(novosResultados)
+  }
 
   const handleRecordResults = () => {
-    onRecordResults(resultados);
-    setResultados(emparceiramentos.map(() => ({ vencedor: '', pontos1: '', pontos2: '' })));
-  };
+    onRecordResults(resultados)
+    setResultados(
+      emparceiramentos.map(() => ({ vencedor: '', pontos1: 0, pontos2: 0 })),
+    )
+  }
 
   return (
     <div>
@@ -24,7 +26,9 @@ const RoundResults = ({ emparceiramentos, onRecordResults }) => {
           <li key={index}>
             {par[0]} vs {par[1]}
             <select
-              onChange={(e) => handleResultChange(index, 'vencedor', e.target.value)}
+              onChange={(e) =>
+                handleResultChange(index, 'vencedor', e.target.value)
+              }
               value={resultados[index].vencedor}
             >
               <option value="">Selecione o vencedor</option>
@@ -36,20 +40,24 @@ const RoundResults = ({ emparceiramentos, onRecordResults }) => {
               type="number"
               placeholder={`Pontos de ${par[0]}`}
               value={resultados[index].pontos1}
-              onChange={(e) => handleResultChange(index, 'pontos1', e.target.value)}
+              onChange={(e) =>
+                handleResultChange(index, 'pontos1', e.target.value)
+              }
             />
             <input
               type="number"
               placeholder={`Pontos de ${par[1]}`}
               value={resultados[index].pontos2}
-              onChange={(e) => handleResultChange(index, 'pontos2', e.target.value)}
+              onChange={(e) =>
+                handleResultChange(index, 'pontos2', e.target.value)
+              }
             />
           </li>
         ))}
       </ul>
       <button onClick={handleRecordResults}>Registrar Resultados</button>
     </div>
-  );
+  )
 }
 
 export { RoundResults }
