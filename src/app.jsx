@@ -1,14 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Ranking } from './components/ranking'
 import { AddPlayers } from './components/addPlayers'
 import { ParingRounds } from './components/paringRounds'
 import { RoundTime } from './components/roundTime'
 import { RoundResults } from './components/roundResults'
 
-function App() {
-  const [jogadores, setJogadores] = useState([])
-  const [emparceiramentos, setEmparelhamentos] = useState([])
+const App = () => {
+  const [jogadores, setJogadores] = useState(() => {
+    const savedPlayers = localStorage.getItem('jogadores')
+    return savedPlayers ? JSON.parse(savedPlayers) : []
+  })
+  const [emparceiramentos, setEmparelhamentos] = useState(() => {
+    const savedPairs = localStorage.getItem('emparceiramentos')
+    return savedPairs ? JSON.parse(savedPairs) : []
+  })
   const [rodadaIniciada, setRodadaIniciada] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('jogadores', JSON.stringify(jogadores))
+  }, [jogadores])
+
+  useEffect(() => {
+    localStorage.setItem('emparceiramentos', JSON.stringify(emparceiramentos))
+  }, [emparceiramentos])
 
   const adicionarJogador = (nome) => {
     setJogadores([
