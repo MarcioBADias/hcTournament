@@ -113,6 +113,14 @@ const App = () => {
     iniciarRodada(novosEmparceiramentos)
   }
 
+  const restart = () => {
+    setJogadores([])
+    setEmparelhamentos([])
+    localStorage.removeItem('jogadores')
+    localStorage.removeItem('emparceiramentos')
+    setRodadaIniciada(false)
+  }
+
   return (
     <div>
       <img
@@ -140,6 +148,8 @@ const App = () => {
         </div>
       )}
       <Ranking jogadores={jogadores} />
+
+      {emparceiramentos && <button onClick={restart}>Reiniciar Torneio</button>}
     </div>
   )
 }
