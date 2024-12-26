@@ -27,8 +27,32 @@ const App = () => {
   const adicionarJogador = (nome) => {
     setJogadores([
       ...jogadores,
-      { nome, vitorias: 0, derrotas: 0, pontos: 0, pontosTotais: 0 },
+      {
+        nome,
+        vitorias: 0,
+        derrotas: 0,
+        pontos: 0,
+        pontosTotais: 0,
+        historico: [],
+      },
     ])
+  }
+
+  const editarJogador = (nomeAntigo, dadosAtualizados) => {
+    const jogadoresAtualizados = jogadores.map((jogador) => {
+      if (jogador.nome === nomeAntigo) {
+        return { ...jogador, ...dadosAtualizados }
+      }
+      return jogador
+    })
+
+    // Atualizar emparceiramentos para refletir a mudança de nome, se necessário
+    const emparceiramentosAtualizados = emparceiramentos.map((par) =>
+      par.map((nome) => (nome === nomeAntigo ? dadosAtualizados.nome : nome)),
+    )
+
+    setJogadores(jogadoresAtualizados)
+    setEmparelhamentos(emparceiramentosAtualizados)
   }
 
   const iniciarRodada = (pares) => {
@@ -41,25 +65,23 @@ const App = () => {
   }
 
   const emparelharJogadores = () => {
-    // Ordenar jogadores por vitórias e pontos acumulados
     const jogadoresOrdenados = [...jogadores].sort((a, b) => {
       if (b.vitorias !== a.vitorias) {
         return b.vitorias - a.vitorias
       }
-      return b.pontosTotais - a.pontosTotais // Critério de desempate
+      return b.pontosTotais - a.pontosTotais
     })
 
     const novosEmparceiramentos = []
     while (jogadoresOrdenados.length >= 2) {
       const jogador1 = jogadoresOrdenados.shift()
 
-      // Encontrar um jogador que não esteja no histórico
       let jogador2 = jogadoresOrdenados.find(
-        (j) => !jogador1.historico?.includes(j.nome),
+        (j) => !jogador1.historico.includes(j.nome),
       )
 
       if (!jogador2) {
-        jogador2 = jogadoresOrdenados.shift() // Se não houver nenhum jogador disponível que não esteja no histórico
+        jogador2 = jogadoresOrdenados.shift()
       } else {
         const index = jogadoresOrdenados.findIndex(
           (j) => j.nome === jogador2.nome,
@@ -84,11 +106,9 @@ const App = () => {
       const jogador1Obj = jogadoresAtualizados.find((j) => j.nome === jogador1)
       const jogador2Obj = jogadoresAtualizados.find((j) => j.nome === jogador2)
 
-      // Adicionando pontos
       jogador1Obj.pontosTotais += pontos1
       jogador2Obj.pontosTotais += pontos2
 
-      // Atualizando vitórias e derrotas
       if (resultado.vencedor === jogador1) {
         jogador1Obj.vitorias++
         jogador2Obj.derrotas++
@@ -97,9 +117,6 @@ const App = () => {
         jogador1Obj.derrotas++
       }
 
-      // Atualizando o histórico para evitar futuros confrontos repetidos
-      jogador1Obj.historico = jogador1Obj.historico || []
-      jogador2Obj.historico = jogador2Obj.historico || []
       jogador1Obj.historico.push(jogador2)
       jogador2Obj.historico.push(jogador1)
     })
@@ -126,12 +143,12 @@ const App = () => {
       <img
         className="logoRotate"
         src="/hcMkpBlack.png"
-        style={{
-          width: 100,
-        }}
+        style={{ width: 100 }}
       />
       <h1>Torneio Heroclix</h1>
       <AddPlayers onAddPlayer={adicionarJogador} />
+      <Ranking jogadores={jogadores} onUpdatePlayer={editarJogador} />
+
       {!rodadaIniciada && (
         <ParingRounds jogadores={jogadores} onStartRound={iniciarRodada} />
       )}
@@ -147,8 +164,6 @@ const App = () => {
           </button>
         </div>
       )}
-      <Ranking jogadores={jogadores} />
-
       {emparceiramentos && <button onClick={restart}>Reiniciar Torneio</button>}
     </div>
   )
