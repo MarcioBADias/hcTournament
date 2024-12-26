@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Ranking } from './components/ranking'
 import { AddPlayers } from './components/addPlayers'
 import { ParingRounds } from './components/paringRounds'
-import { RoundTime } from './components/roundTime'
 import { RoundResults } from './components/roundResults'
 
 const App = () => {
-  const [jogadores, setJogadores] = useState(() => {
-    const savedPlayers = localStorage.getItem('jogadores')
+  const [players, setPlayers] = useState(() => {
+    const savedPlayers = localStorage.getItem('players')
     return savedPlayers ? JSON.parse(savedPlayers) : []
   })
   const [emparceiramentos, setEmparelhamentos] = useState(() => {
@@ -15,18 +14,19 @@ const App = () => {
     return savedPairs ? JSON.parse(savedPairs) : []
   })
   const [rodadaIniciada, setRodadaIniciada] = useState(false)
+  const [displayRank, setDisplayRank] = useState(true)
 
   useEffect(() => {
-    localStorage.setItem('jogadores', JSON.stringify(jogadores))
-  }, [jogadores])
+    localStorage.setItem('players', JSON.stringify(players))
+  }, [players])
 
   useEffect(() => {
     localStorage.setItem('emparceiramentos', JSON.stringify(emparceiramentos))
   }, [emparceiramentos])
 
   const adicionarJogador = (nome) => {
-    setJogadores([
-      ...jogadores,
+    setPlayers([
+      ...players,
       {
         nome,
         vitorias: 0,
@@ -39,7 +39,7 @@ const App = () => {
   }
 
   const editarJogador = (nomeAntigo, dadosAtualizados) => {
-    const jogadoresAtualizados = jogadores.map((jogador) => {
+    const playersAtualizados = players.map((jogador) => {
       if (jogador.nome === nomeAntigo) {
         return { ...jogador, ...dadosAtualizados }
       }
@@ -51,21 +51,22 @@ const App = () => {
       par.map((nome) => (nome === nomeAntigo ? dadosAtualizados.nome : nome)),
     )
 
-    setJogadores(jogadoresAtualizados)
+    setPlayers(playersAtualizados)
     setEmparelhamentos(emparceiramentosAtualizados)
   }
 
   const iniciarRodada = (pares) => {
     setEmparelhamentos(pares)
     setRodadaIniciada(true)
+    setDisplayRank(false)
   }
 
   const encerrarRodada = () => {
     setRodadaIniciada(false)
   }
 
-  const emparelharJogadores = () => {
-    const jogadoresOrdenados = [...jogadores].sort((a, b) => {
+  const emparelharplayers = () => {
+    const playersOrdenados = [...players].sort((a, b) => {
       if (b.vitorias !== a.vitorias) {
         return b.vitorias - a.vitorias
       }
@@ -73,20 +74,20 @@ const App = () => {
     })
 
     const novosEmparceiramentos = []
-    while (jogadoresOrdenados.length >= 2) {
-      const jogador1 = jogadoresOrdenados.shift()
+    while (playersOrdenados.length >= 2) {
+      const jogador1 = playersOrdenados.shift()
 
-      let jogador2 = jogadoresOrdenados.find(
+      let jogador2 = playersOrdenados.find(
         (j) => !jogador1.historico.includes(j.nome),
       )
 
       if (!jogador2) {
-        jogador2 = jogadoresOrdenados.shift()
+        jogador2 = playersOrdenados.shift()
       } else {
-        const index = jogadoresOrdenados.findIndex(
+        const index = playersOrdenados.findIndex(
           (j) => j.nome === jogador2.nome,
         )
-        jogadoresOrdenados.splice(index, 1)
+        playersOrdenados.splice(index, 1)
       }
 
       novosEmparceiramentos.push([jogador1.nome, jogador2.nome])
@@ -96,15 +97,15 @@ const App = () => {
   }
 
   const registrarResultados = (resultados) => {
-    const jogadoresAtualizados = [...jogadores]
+    const playersAtualizados = [...players]
 
     resultados.forEach((resultado, index) => {
       const [jogador1, jogador2] = emparceiramentos[index]
       const pontos1 = parseInt(resultado.pontos1, 10)
       const pontos2 = parseInt(resultado.pontos2, 10)
 
-      const jogador1Obj = jogadoresAtualizados.find((j) => j.nome === jogador1)
-      const jogador2Obj = jogadoresAtualizados.find((j) => j.nome === jogador2)
+      const jogador1Obj = playersAtualizados.find((j) => j.nome === jogador1)
+      const jogador2Obj = playersAtualizados.find((j) => j.nome === jogador2)
 
       jogador1Obj.pontosTotais += pontos1
       jogador2Obj.pontosTotais += pontos2
@@ -121,21 +122,23 @@ const App = () => {
       jogador2Obj.historico.push(jogador1)
     })
 
-    setJogadores(jogadoresAtualizados)
+    setDisplayRank(true)
+    setPlayers(playersAtualizados)
   }
 
   const terminarRodadaEIniciarNova = () => {
     encerrarRodada()
-    const novosEmparceiramentos = emparelharJogadores()
+    const novosEmparceiramentos = emparelharplayers()
     iniciarRodada(novosEmparceiramentos)
   }
 
   const restart = () => {
-    setJogadores([])
+    setPlayers([])
     setEmparelhamentos([])
-    localStorage.removeItem('jogadores')
+    localStorage.removeItem('players')
     localStorage.removeItem('emparceiramentos')
     setRodadaIniciada(false)
+    setDisplayRank(true)
   }
 
   return (
@@ -147,14 +150,15 @@ const App = () => {
       />
       <h1>Torneio Heroclix</h1>
       <AddPlayers onAddPlayer={adicionarJogador} />
-      <Ranking jogadores={jogadores} onUpdatePlayer={editarJogador} />
+      {displayRank && (
+        <Ranking players={players} onUpdatePlayer={editarJogador} />
+      )}
 
       {!rodadaIniciada && (
-        <ParingRounds jogadores={jogadores} onStartRound={iniciarRodada} />
+        <ParingRounds players={players} onStartRound={iniciarRodada} />
       )}
       {rodadaIniciada && (
         <div>
-          <RoundTime onEndRound={encerrarRodada} />
           <RoundResults
             emparceiramentos={emparceiramentos}
             onRecordResults={registrarResultados}

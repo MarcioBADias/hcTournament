@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
 
-const ParingRounds = ({ jogadores, onStartRound }) => {
-  const [emparceiramentos, setEmparceiramentos] = useState([])
+const ParingRounds = ({ players, onStartRound }) => {
+  const [pairings, setPairings] = useState([])
 
   const handleEmparelhamento = () => {
-    const pares = []
-    const jogadoresRestantes = [...jogadores]
+    const pairs = []
+    const remainingPlayers = [...players]
 
-    while (jogadoresRestantes.length >= 2) {
-      const jogador1 = jogadoresRestantes.shift()
-      const jogador2 = jogadoresRestantes.shift()
-      pares.push([jogador1.nome, jogador2.nome])
+    while (remainingPlayers.length >= 2) {
+      const player1 = remainingPlayers.shift()
+      const player2 = remainingPlayers.shift()
+      pairs.push([player1.nome, player2.nome])
     }
 
-    setEmparceiramentos(pares)
-    onStartRound(pares)
+    setPairings(pairs)
+    onStartRound(pairs)
   }
 
   return (
@@ -22,7 +22,7 @@ const ParingRounds = ({ jogadores, onStartRound }) => {
       <h2>Emparelhamento de Rodadas</h2>
       <button onClick={handleEmparelhamento}>Emparelhar</button>
       <ul>
-        {emparceiramentos.map((par, index) => (
+        {pairings.map((par, index) => (
           <li key={index}>
             {par[0]} vs {par[1]}{' '}
           </li>

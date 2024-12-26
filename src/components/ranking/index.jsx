@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
-const Ranking = ({ jogadores, onUpdatePlayer }) => {
+const Ranking = ({ players, onUpdatePlayer }) => {
   const [editIndex, setEditIndex] = useState(null)
   const [editData, setEditData] = useState({})
 
-  const classifiedPlayers = [...jogadores].sort((a, b) => {
+  const classifiedPlayers = [...players].sort((a, b) => {
     return b.vitorias - a.vitorias || b.pontosTotais - a.pontosTotais
   })
 
@@ -20,7 +20,7 @@ const Ranking = ({ jogadores, onUpdatePlayer }) => {
 
   const handleSaveClick = () => {
     if (editData.nome.trim()) {
-      onUpdatePlayer(jogadores[editIndex].nome, editData)
+      onUpdatePlayer(players[editIndex].nome, editData)
     }
     setEditIndex(null)
     setEditData({})
@@ -43,12 +43,14 @@ const Ranking = ({ jogadores, onUpdatePlayer }) => {
           <li key={index}>
             {editIndex === index ? (
               <div>
+                <label>Jogador</label>
                 <input
                   type="text"
                   value={editData.nome}
                   onChange={(e) => handleChange('nome', e.target.value)}
                   placeholder="Nome"
                 />
+                <label>VItorias</label>
                 <input
                   type="number"
                   value={editData.vitorias}
@@ -57,6 +59,7 @@ const Ranking = ({ jogadores, onUpdatePlayer }) => {
                   }
                   placeholder="Vitórias"
                 />
+                <label>Derrotas</label>
                 <input
                   type="number"
                   value={editData.derrotas}
@@ -65,6 +68,7 @@ const Ranking = ({ jogadores, onUpdatePlayer }) => {
                   }
                   placeholder="Derrotas"
                 />
+                <label>Pontos</label>
                 <input
                   type="number"
                   value={editData.pontosTotais}
