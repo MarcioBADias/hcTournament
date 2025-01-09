@@ -1,26 +1,27 @@
 import React, { useState } from 'react'
+import * as C from './styles'
 
 const Ranking = ({ players, onUpdatePlayer }) => {
   const [editIndex, setEditIndex] = useState(null)
   const [editData, setEditData] = useState({})
 
   const classifiedPlayers = [...players].sort((a, b) => {
-    return b.vitorias - a.vitorias || b.pontosTotais - a.pontosTotais
+    return b.victories - a.victories || b.pontosTotais - a.pontosTotais
   })
 
-  const handleEditClick = (index, jogador) => {
+  const handleEditClick = (index, player) => {
     setEditIndex(index)
     setEditData({
-      nome: jogador.nome,
-      vitorias: jogador.vitorias,
-      derrotas: jogador.derrotas,
-      pontosTotais: jogador.pontosTotais,
+      name: player.name,
+      victories: player.victories,
+      derrotas: player.derrotas,
+      pontosTotais: player.pontosTotais,
     })
   }
 
   const handleSaveClick = () => {
-    if (editData.nome.trim()) {
-      onUpdatePlayer(players[editIndex].nome, editData)
+    if (editData.name.trim()) {
+      onUpdatePlayer(players[editIndex].name, editData)
     }
     setEditIndex(null)
     setEditData({})
@@ -39,23 +40,23 @@ const Ranking = ({ players, onUpdatePlayer }) => {
     <div>
       <h2>Ranking</h2>
       <ul>
-        {classifiedPlayers.map((jogador, index) => (
+        {classifiedPlayers.map((player, index) => (
           <li key={index}>
             {editIndex === index ? (
               <div>
                 <label>Jogador</label>
                 <input
                   type="text"
-                  value={editData.nome}
-                  onChange={(e) => handleChange('nome', e.target.value)}
-                  placeholder="Nome"
+                  value={editData.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  placeholder="nome"
                 />
-                <label>VItorias</label>
+                <label>Vitórias</label>
                 <input
                   type="number"
-                  value={editData.vitorias}
+                  value={editData.victories}
                   onChange={(e) =>
-                    handleChange('vitorias', parseInt(e.target.value, 10) || 0)
+                    handleChange('victories', parseInt(e.target.value, 10) || 0)
                   }
                   placeholder="Vitórias"
                 />
@@ -84,13 +85,13 @@ const Ranking = ({ players, onUpdatePlayer }) => {
                 <button onClick={handleCancelClick}>Cancelar</button>
               </div>
             ) : (
-              <div>
-                {jogador.nome} - Vitórias: {jogador.vitorias}, Derrotas:{' '}
-                {jogador.derrotas}, Pontos Acumulados: {jogador.pontosTotais}
-                <button onClick={() => handleEditClick(index, jogador)}>
+              <C.rankPlayer>
+                {player.name} - Vitórias: {player.victories}, Derrotas:{' '}
+                {player.derrotas}, Pontos Acumulados: {player.pontosTotais}
+                <button onClick={() => handleEditClick(index, player)}>
                   Editar
                 </button>
-              </div>
+              </C.rankPlayer>
             )}
           </li>
         ))}

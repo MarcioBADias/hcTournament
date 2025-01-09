@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
 const AddPlayers = ({ onAddPlayer }) => {
-  const [nome, setNome] = useState('')
+  const [name, setName] = useState('')
 
   const handleAddPlayer = () => {
-    if (nome.trim()) {
-      onAddPlayer(nome.trim())
-      setNome('')
+    if (name.trim()) {
+      onAddPlayer(name.trim())
+      setName('')
     }
   }
 
@@ -15,8 +15,8 @@ const AddPlayers = ({ onAddPlayer }) => {
       <h2>Cadastro de Jogadores</h2>
       <input
         type="text"
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
         placeholder="Nome do jogador"
       />
       <button onClick={handleAddPlayer}>Adicionar Jogador</button>

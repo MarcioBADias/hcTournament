@@ -10,7 +10,7 @@ const ParingRounds = ({ players, onStartRound }) => {
     while (remainingPlayers.length >= 2) {
       const player1 = remainingPlayers.shift()
       const player2 = remainingPlayers.shift()
-      pairs.push([player1.nome, player2.nome])
+      pairs.push([player1.name, player2.name])
     }
 
     setPairings(pairs)
@@ -22,9 +22,9 @@ const ParingRounds = ({ players, onStartRound }) => {
       <h2>Emparelhamento de Rodadas</h2>
       <button onClick={handleEmparelhamento}>Emparelhar</button>
       <ul>
-        {pairings.map((par, index) => (
+        {pairings.map((pair, index) => (
           <li key={index}>
-            {par[0]} vs {par[1]}{' '}
+            {pair[0]} vs {pair[1]}{' '}
           </li>
         ))}
       </ul>
